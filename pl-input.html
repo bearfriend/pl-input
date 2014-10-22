@@ -1,31 +1,36 @@
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../paper-input/paper-input.html" />
 
 <!--
-Element providing solution to no problem in particular.
+Element providing solution to the shortcomings of the Polymer/paper-input.
 
 ##### Example
 
     <pl-input></pl-input>
 
 @element pl-input
-@blurb Element providing solution to no problem in particular.
+@blurb Element providing solution to the shortcomings of the Polymer/paper-input.
 @status alpha
 @homepage http://polymerlabs.github.io/pl-input
 -->
-<polymer-element name="pl-input" attributes="notitle author">
+<polymer-element name="pl-input" extends="paper-input" attributes="required" on-change="{{ startValidation }}" on-input="{{ checkRequired }}">
 
   <template>
-
     <link rel="stylesheet" href="pl-input.css" />
-
-    <h1>Hello from pl-input</h1>
-    <content></content>
-
+	<shadow></shadow>
   </template>
 
   <script>
-
+	
     Polymer({
+	  validateImmediately: false,
+	  get required() {
+	    if (this.constructor == HTMLElement && (this.getAttribute('required') || this.getAttribute('required') == '')) {
+	      return this.required || 1;
+	    }
+	    return 0;
+	},
+	
       /**
        * The `author` attribute sets an initial author
        *
@@ -43,13 +48,7 @@ Element providing solution to no problem in particular.
        * @default false
        */
       fancy: false,
-
-      ready: function() {
-        // Ready is a lifecycle callback.
-        // You can do setup work in here.
-        // More info: http://www.polymer-project.org/docs/polymer/polymer.html#lifecyclemethods
-      },
-
+	
       /**
        * The `sayHello` method will return a greeting.
        *
@@ -79,10 +78,28 @@ Element providing solution to no problem in particular.
        */
       fireLasers: function() {
         this.fire('pl-input-lasers-success', { sound: 'Pew pew pew!' });
-      }
+      },
+
+	  startValidation: function(e) {
+	    this.checkValidity();
+	    this.setAttribute('validateImmediately',true);
+	  },
+	  checkRequired: function(e) {
+	
+	    if (typeof this.required == 'string' && this.inputValue == '') {
+	      // Set the appropriate error message and mark invalid for being empty
+          this.shadowRoots['paper-input'].querySelector('.error-text').innerText = this.required || this.error || 'This field is required.';
+	      this.setCustomValidity(true);
+	    }
+	    else {
+      	  // Reset the error message and mark valid. This will not supress other validation failures
+	      this.shadowRoots['paper-input'].querySelector('.error-text').innerText = this.error;
+	      if (this.validateImmediately) this.setCustomValidity();
+	    }
+	  }
 
     });
-
+	
   </script>
 
 </polymer-element>
