@@ -11,9 +11,10 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 @element pl-input
 @blurb Element providing solution to the shortcomings of the Polymer/paper-input.
 @status alpha
+@extends paper-input
 @homepage http://polymerlabs.github.io/pl-input
 -->
-<polymer-element name="pl-input" extends="paper-input" attributes="required" on-change="{{ startValidation }}" on-input="{{ checkRequired }}">
+<polymer-element name="pl-input" extends="paper-input" attributes="required validation" on-change="{{ startValidation }}" on-input="{{ checkRequired }}">
 
   <template>
     <link rel="stylesheet" href="pl-input.css" />
@@ -29,60 +30,35 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 	      return this.required || 1;
 	    }
 	    return 0;
-	},
+	  },
+
+	  validationChanged function() {
+		  this.startValidation();
+	  }
+
+	  /**
+       * The validation attribute turns validation on or off. If `true`, validation begins `on-change`, unless `validateImmediately` is `true`.
+       *
+       * @attribute validation
+       * @type boolean
+       * @default true
+       */
+	  validation: true,
 	
       /**
        * The `author` attribute sets an initial author
        *
        * @attribute author
        * @type string
-       * @default 'Dimitri Glazkov'
+       * @default 'Daniel Gleckler'
        */
-      author: 'Dimitri Glazkov',
-
-      /**
-       * `fancy` is a property that does something fancy.
-       *
-       * @property fancy
-       * @type bool
-       * @default false
-       */
-      fancy: false,
-	
-      /**
-       * The `sayHello` method will return a greeting.
-       *
-       * @method sayHello
-       * @param {String} greeting Pass in a specific greeting.
-       * @return {String} Returns a string greeting.
-       */
-      sayHello: function(greeting) {
-        var response = greeting || 'Hello World!';
-        return 'pl-input says, ' + response;
-      },
-
-      /**
-       * The `pl-input-lasers-success` event is fired whenever we
-       * call fireLasers.
-       *
-       * @event pl-input-lasers-success
-       * @param {Object} detail
-       *   @param {string} detail.sound An amazing sound.
-       */
-
-      /**
-       * The `fireLasers` method will fire the lasers. At least
-       * it will dispatch an event that claims lasers were fired :)
-       *
-       * @method fireLasers
-       */
-      fireLasers: function() {
-        this.fire('pl-input-lasers-success', { sound: 'Pew pew pew!' });
-      },
+      get author() { return 'Daniel Gleckler' },
 
 	  startValidation: function(e) {
-	    this.checkValidity();
-	    this.setAttribute('validateImmediately',true);
+		if (this.validation) {
+	      this.checkValidity();
+	      this.setAttribute('validateImmediately',true);
+		}
 	  },
 	  checkRequired: function(e) {
 	
