@@ -14,16 +14,27 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 @extends paper-input
 @homepage http://polymerlabs.github.io/pl-input
 -->
-<polymer-element name="pl-input" extends="paper-input" attributes="required validation" on-change="{{ startValidation }}" on-input="{{ checkRequired }}">
+<polymer-element name="pl-input" extends="paper-input" attributes="required validation inline read empty" on-change="{{ startValidation }}" on-input="{{ checkRequired }}">
 
   <template>
     <link rel="stylesheet" href="pl-input.css" />
+	<template bind if="{{ read }}">
+	  <div id="read" fit layout horizontal center>
+		<div class="mirror" aria-hidden>{{ value }}</div>
+		<label for="{{ id }}" on-tap="{{ focus('me') }}">Edit</label>
+	  </div>
+	</template>
 	<shadow></shadow>
   </template>
 
   <script>
 	
     Polymer({
+
+	  focus: function(id) {
+		console.log(id);
+	  },
+	  
 	  validateImmediately: false,
 	  get required() {
 	    if (this.constructor == HTMLElement && (this.getAttribute('required') || this.getAttribute('required') == '')) {
@@ -32,10 +43,38 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 	    return 0;
 	  },
 
+
+	  read: false,
+
+	  get empty() {
+		if (this.constructor == HTMLElement) {
+		  return this.getAttribute('empty') != null;
+		}
+	  },
+	  
 	  validationChanged: function() {
 		  this.startValidation();
 	  },
 
+	  ready: function() {
+		this.super(arguments);
+		this.setEmpty(null,this.value);
+	  },
+	  
+	  setEmpty: function(e,v) {
+		if (!v) {
+		  this.setAttribute('empty','');
+		}
+		else {
+		  this.removeAttribute('empty');
+		}
+	  },
+	  
+	  valueChanged: function(e,v) {
+		this.super(arguments);
+		this.setEmpty(e,v);
+	  },
+	  
 	  /**
        * The validation attribute turns validation on or off. If `true`, validation begins `on-change`, unless `validateImmediately` is `true`.
        *
