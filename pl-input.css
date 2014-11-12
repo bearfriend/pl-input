@@ -1,23 +1,42 @@
-/*:host[inline]:not([focused]) .unfocused-underline {*/
+:host {
+
+}
+
 :host([read]:not(.invalid):not([empty]))::shadow .unfocused-underline {
 	background-color: transparent;
 }
 
 #read {
-	visibility: hidden;
-}
-
-/*:host([read]:not(.invalid):not([empty]):not([focused]))::shadow #read {*/
-:host([read]:not(.invalid):not([focused]))::shadow #read {*/
-	visibility: visible;
-	padding: 0.5em 0 0.25em;
-	max-width: 100%;
+	padding: .5em 0 .25em .75em;
+	min-width: 0px;
 	white-space: nowrap;
+	box-sizing: border-box;
+	transition: opacity .4s;
+	overflow: hidden;
 }
 
-#read .mirror {
-	color: transparent;
-	visibility: hidden;
+:host([empty][read]) #paper-input {
+	width: 0px;
+}
+
+:host([empty]) #read {
+	padding-left: 0px;
+}
+
+#paper-input {
+	transition: min-width .4s;
+	box-sizing: border-box;
+}
+
+:host([read]:not(.invalid))::shadow #input {
+	text-overflow: ellipsis;
+}
+
+:host([read].invalid)::shadow #read, :host([focused])::shadow #read {
 	opacity: 0;
-	pointer-events: none;
+	
+}
+
+:host([read].invalid)::shadow #paper-input, :host([focused])::shadow #paper-input {
+	min-width: 100%;
 }

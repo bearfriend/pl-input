@@ -18,23 +18,21 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 
   <template>
     <link rel="stylesheet" href="pl-input.css" />
-	<template bind if="{{ read }}">
-	  <div id="read" fit layout horizontal center>
-		<div class="mirror" aria-hidden>{{ value }}</div>
-		<label for="{{ id }}" on-tap="{{ focus('me') }}">Edit</label>
+	<div layout horizontal>
+	  <div id="paper-input">
+		<shadow></shadow>
 	  </div>
-	</template>
-	<shadow></shadow>
+	  <template bind if="{{ read }}">
+		  <label id="read" style="flex-shrink:0;" for="{{ id }}" on-tap="{{ focus }}">Edit</label>
+	  </template>
+	</div>
+	  
   </template>
 
   <script>
 	
     Polymer({
 
-	  focus: function(id) {
-		console.log(id);
-	  },
-	  
 	  validateImmediately: false,
 	  get required() {
 	    if (this.constructor == HTMLElement && (this.getAttribute('required') || this.getAttribute('required') == '')) {
@@ -58,6 +56,8 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 
 	  ready: function() {
 		this.super(arguments);
+		this.removeAttribute('layout');
+		this.removeAttribute('vertical');
 		this.setEmpty(null,this.value);
 	  },
 	  
