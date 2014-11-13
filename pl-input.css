@@ -13,6 +13,7 @@
 	box-sizing: border-box;
 	transition: opacity .4s;
 	overflow: hidden;
+	flex-shrink: 0;
 }
 
 :host([empty][read]) #paper-input {

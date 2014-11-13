@@ -18,12 +18,12 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 
   <template>
     <link rel="stylesheet" href="pl-input.css" />
-	<div layout horizontal>
+	<div layout?="{{ read }}" horizontal?="{{ read }}">
 	  <div id="paper-input">
 		<shadow></shadow>
 	  </div>
 	  <template bind if="{{ read }}">
-		  <label id="read" style="flex-shrink:0;" for="{{ id }}" on-tap="{{ focus }}">Edit</label>
+		  <label id="read" for="{{ id }}" on-tap="{{ focus }}">Edit</label>
 	  </template>
 	</div>
 	  
@@ -32,7 +32,7 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
   <script>
 	
     Polymer({
-
+	  
 	  validateImmediately: false,
 	  get required() {
 	    if (this.constructor == HTMLElement && (this.getAttribute('required') || this.getAttribute('required') == '')) {
