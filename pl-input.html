@@ -103,12 +103,13 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 	
 	    if (typeof this.required == 'string' && this.inputValue == '') {
 	      // Set the appropriate error message and mark invalid for being empty
-          this.shadowRoots['paper-input'].querySelector('.error-text').innerText = this.required || this.error || 'This field is required.';
+          //this.shadowRoots['paper-input'].querySelector('.error-text').innerText = this.required || this.error || 'This field is required.';
+		  this.shadowRoots['paper-input'].querySelector('paper-input-decorator').shadowRoot.querySelector('.error-text').innerText = this.required || this.error || 'This field is required.';
 	      this.setCustomValidity(true);
 	    }
 	    else {
       	  // Reset the error message and mark valid. This will not supress other validation failures
-	      this.shadowRoots['paper-input'].querySelector('.error-text').innerText = this.error;
+		  this.shadowRoots['paper-input'].querySelector('paper-input-decorator').shadowRoot.querySelector('.error-text').innerText = this.error;
 	      if (this.validateImmediately) this.setCustomValidity();
 	    }
 	  }
