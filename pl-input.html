@@ -41,9 +41,15 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 	    return 0;
 	  },
 
-
 	  read: false,
 
+	  publish: {
+		focused: {
+		  value: false,
+		  reflect: true
+		}
+	  },
+	  
 	  get empty() {
 		if (this.constructor == HTMLElement) {
 		  return this.getAttribute('empty') != null;
@@ -55,6 +61,12 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 	  },
 
 	  ready: function() {
+
+		var decorator = this.shadowRoots['paper-input'].querySelector('paper-input-decorator');
+		  
+		Polymer.addEventListener(this, 'focus', decorator.focusAction.bind(this), true);
+		Polymer.addEventListener(this, 'blur', decorator.blurAction.bind(this), true);
+		
 		this.super(arguments);
 		this.removeAttribute('layout');
 		this.removeAttribute('vertical');
