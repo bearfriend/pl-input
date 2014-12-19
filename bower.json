@@ -1,12 +1,12 @@
 {
-  "name": "pl-input",
+  "name": "pl-input-decorator",
   "version": "0.0.0",
   "keywords": [
     "seed",
     "polymer",
     "web-components"
   ],
-  "main": "pl-input.html",
+  "main": "pl-input-decorator.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^0.5.1",
     "paper-input": "Polymer/paper-input#~0.5.1"

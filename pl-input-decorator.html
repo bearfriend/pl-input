@@ -1,0 +1,132 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../paper-input/paper-input.html" />
+
+<!--
+Element providing solution to the shortcomings of the Polymer/paper-input.
+
+##### Example
+
+    <pl-input-decorator></pl-input-decorator>
+
+@element pl-input-decorator
+@blurb Element providing solution to the shortcomings of the Polymer/paper-input.
+@status alpha
+@extends paper-input
+@homepage http://polymerlabs.github.io/pl-input-decorator
+-->
+<polymer-element name="pl-input-decorator" extends="paper-input-decorator" attributes="read required validation empty" on-change="{{ valueChanged }}" on-input="{{ checkValidation }}" on-invalid="{{ checkValidation }}">
+
+  <template>
+    <link rel="stylesheet" href="pl-input-decorator.css" />
+	<div layout?="{{ read }}" horizontal?="{{ read }}">
+	  <div id="paper-input">
+		<shadow></shadow>
+		<!--
+		<paper-input-decorator id="pid">
+		  <content select="pl-input"></content>
+		  <content select="input"></content>
+		</paper-input-decorator>
+		-->
+	  </div>
+	  <template bind if="{{ read }}">
+		  <label id="read" aria-hidden on-tap="{{ focus }}">Edit</label>
+	  </template>
+	</div>
+
+	<shadow></shadow>
+	
+  </template>
+
+  <script>
+	
+    Polymer({
+	 
+	  read: false,
+	  
+      /**
+       * The `author` attribute sets an initial author
+       *
+       * @attribute author
+       * @type string
+       * @default 'Daniel Gleckler'
+       */
+      get author() { return 'Daniel Gleckler' },
+
+	  ready: function() {
+		this.super();
+		this.removeAttribute('vertical');
+		this.removeAttribute('layout');
+	  },
+	  
+	  attached: function() {
+		this.super();
+		this.setEmpty(null,this.input.value);
+	  },
+
+	  focus: function() {
+		this.input.focus();
+	  },
+
+	  valueChanged: function() {
+		this.setEmpty(null,this.input.value);
+		this.startValidation();
+	  },
+
+	  startValidation: function(e) {
+		if (this.validation) {
+		  this.autoValidate = true;
+		  this.checkValidation();
+		  //this.$.pid.setAttribute('autoValidate',true);
+		}
+	  },
+
+	  get required() {
+		if (this.constructor == HTMLElement && (this.getAttribute('required') || this.getAttribute('required') == '')) {
+		  return this.required || 1;
+		}
+		return 0;
+	  },
+	  
+	  checkValidation: function(e) {
+
+		if (typeof this.required == 'string' && this.input.value == '') {
+		  // Set the appropriate error message and mark invalid for being empty
+		  this.shadowRoots['paper-input-decorator'].querySelector('.error-text').innerText = this.required || this.error || 'This field is required.'; // LOCALIZE!
+		  this.isInvalid = true;
+		}
+		else {
+		  // Reset the error message and mark valid. This will not supress other validation failures
+		  this.shadowRoots['paper-input-decorator'].querySelector('.error-text').innerText = this.error || 'This field is invalid.';
+		  if (this.autoValidate) this.isInvalid = !this.input.validity.valid;
+		}
+	  },
+
+	  get empty() {
+		if (this.constructor == HTMLElement) {
+		  return this.getAttribute('empty') != null;
+		}
+	  },
+
+	  setEmpty: function(e,v) {
+		if (!v) {
+		  this.setAttribute('empty','');
+		}
+		else {
+		  this.removeAttribute('empty');
+		}
+	  },
+
+	  /**
+	   * The validation attribute turns validation on or off. If `true`, validation begins `on-change`, unless `validateImmediately` is `true`.
+	   *
+	   * @attribute validation
+	   * @type boolean
+	   * @default true
+	   */
+	  validation: true
+	  
+    });
+	
+  </script>
+
+</polymer-element>

@@ -16,7 +16,7 @@
 	flex-shrink: 0;
 }
 
-:host([empty][read]:not([focused])) #paper-input {
+:host([empty][read]:not([focused]):not(.invalid)) #paper-input {
 	width: 0px;
 }
 

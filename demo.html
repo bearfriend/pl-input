@@ -2,17 +2,19 @@
 <html>
 <head>
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-  <title>pl-input Demo</title>
+  <title>pl-input-decorator Demo</title>
 
   <script src="../webcomponentsjs/webcomponents.js"></script>
-  <link rel="import" href="pl-input.html">
+  <link rel="import" href="pl-input-decorator.html">
 
 </head>
 <body unresolved>
 
-  <p>A `pl-input` looks like this:</p>
+  <p>A `pl-input-decorator` looks like this:</p>
 
-  <pl-input label="Enter your email address" required="We need your email address to get started" error="This doesn't look like a valid email address" type="email" value="asdasdf" read></pl-input>
+  <pl-input-decorator read>
+	<input label="Enter your email address" required="We need your email address to get started" error="This doesn't look like a valid email address" type="email" value="asdasdf" read />
+  </pl-input-decorator>
 
 </body>
 </html>
