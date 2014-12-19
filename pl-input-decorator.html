@@ -106,7 +106,7 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 		  }
 		}
 	  },
-
+	  
 	  get empty() {
 		if (this.constructor == HTMLElement) {
 		  return this.getAttribute('empty') != null;
@@ -122,6 +122,13 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 		}
 	  },
 
+	  isInvalidChanged: function() {
+		this.classList.toggle('invalid', this.isInvalid);
+		if (this.isInvalid) {
+		  this.fire('decorator-invalid',{});
+		}
+	  },
+	  
 	  /**
 	   * The validation attribute turns validation on or off. If `true`, validation begins `on-change`, unless `validateImmediately` is `true`.
 	   *
