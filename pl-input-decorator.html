@@ -21,12 +21,6 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 	<div layout?="{{ read }}" horizontal?="{{ read }}">
 	  <div id="paper-input">
 		<shadow></shadow>
-		<!--
-		<paper-input-decorator id="pid">
-		  <content select="pl-input"></content>
-		  <content select="input"></content>
-		</paper-input-decorator>
-		-->
 	  </div>
 	  <template bind if="{{ read }}">
 		  <label id="read" aria-hidden on-tap="{{ focus }}">Edit</label>
@@ -63,6 +57,12 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 		this.setEmpty(null,this.input.value);
 	  },
 
+	  requiredChanged: function() {
+		if (this.hasAttribute('required')) {
+		  this.input.setAttribute('required','');
+		}
+	  },
+
 	  focus: function() {
 		this.input.focus();
 	  },
@@ -88,16 +88,22 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 	  },
 	  
 	  checkValidation: function(e) {
-
-		if (typeof this.required == 'string' && this.input.value == '') {
-		  // Set the appropriate error message and mark invalid for being empty
-		  this.shadowRoots['paper-input-decorator'].querySelector('.error-text').innerText = this.required || this.error || 'This field is required.'; // LOCALIZE!
-		  this.isInvalid = true;
-		}
-		else {
-		  // Reset the error message and mark valid. This will not supress other validation failures
-		  this.shadowRoots['paper-input-decorator'].querySelector('.error-text').innerText = this.error || 'This field is invalid.';
-		  if (this.autoValidate) this.isInvalid = !this.input.validity.valid;
+		if (this.validation) {
+		  if (typeof this.required == 'string' && this.input.value == '') {
+			// Set the appropriate error message and mark invalid for being empty
+			this.shadowRoots['paper-input-decorator'].querySelector('.error-text').innerText = this.required || this.error || 'This field is required.'; // LOCALIZE!
+			this.isInvalid = true;
+		  }
+		  else {
+			// Reset the error message and validity.
+							 this.shadowRoots['paper-input-decorator'].querySelector('.error-text').innerText = this.error || 'This field is invalid.';
+			if (this.autoValidate) {
+			  this.isInvalid = !this.input.validity.valid;
+			}
+			else {
+			  this.isInvalid = false;
+			}
+		  }
 		}
 	  },
 
