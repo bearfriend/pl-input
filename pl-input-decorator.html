@@ -76,7 +76,6 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 		if (this.validation) {
 		  this.autoValidate = true;
 		  this.checkValidation();
-		  //this.$.pid.setAttribute('autoValidate',true);
 		}
 	  },
 
@@ -125,7 +124,11 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 	  isInvalidChanged: function() {
 		this.classList.toggle('invalid', this.isInvalid);
 		if (this.isInvalid) {
-		  this.fire('decorator-invalid',{});
+		  this.fire('decorator-invalid',
+					{
+					  error: this.shadowRoots['paper-input-decorator'].querySelector('.error-text').innerText,
+					  originalTarget: this
+					});
 		}
 	  },
 	  
