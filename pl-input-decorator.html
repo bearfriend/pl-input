@@ -127,7 +127,8 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 		  this.fire('decorator-invalid',
 					{
 					  error: this.shadowRoots['paper-input-decorator'].querySelector('.error-text').innerText,
-					  originalTarget: this
+					  originalTarget: this,
+					  input: this.input
 					});
 		}
 	  },
