@@ -26,8 +26,6 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 		  <label id="read" aria-hidden on-tap="{{ focus }}">Edit</label>
 	  </template>
 	</div>
-
-	<shadow></shadow>
 	
   </template>
 
@@ -55,6 +53,7 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 	  attached: function() {
 		this.super();
 		this.setEmpty(null,this.input.value);
+		this.shadowRoots['paper-input-decorator'].querySelector('.error-text').setAttribute('aria-live','polite');
 	  },
 
 	  requiredChanged: function() {
