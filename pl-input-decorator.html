@@ -11,38 +11,55 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 @element pl-input-decorator
 @blurb Element providing solution to the shortcomings of the Polymer/paper-input.
 @status alpha
-@extends paper-input
+@extends paper-input-decorator
 @homepage http://polymerlabs.github.io/pl-input-decorator
 -->
-<polymer-element name="pl-input-decorator" extends="paper-input-decorator" attributes="read required validation empty" on-change="{{ valueChanged }}" on-input="{{ checkValidation }}" on-invalid="{{ checkValidation }}">
-
+<polymer-element name="pl-input-decorator" extends="paper-input-decorator" attributes="read required validation empty" on-change="{{ valueChanged }}" on-input="{{ inputHandler }}" on-invalid="{{ checkValidation }}">  
   <template>
     <link rel="stylesheet" href="pl-input-decorator.css" />
-	<div layout?="{{ read }}" horizontal?="{{ read }}" center?="{{ read }}">
+	<div layout?="{{ read }}" horizontal?="{{ read }}" relative aria-hidden>
 	  <div id="paper-input">
 		<shadow></shadow>
 	  </div>
 	  <template bind if="{{ read }}">
-		  <label id="read" aria-hidden on-tap="{{ focus }}">Edit</label>
+		<label id="edit" hidden?="{{ focused }}" aria-hidden on-tap="{{ focus }}">Edit</label>
+		<label id="done" hidden?="{{ !focused }}" aria-hidden>Done</label>
 	  </template>
+	  <div id="mirror" style="max-width:{{ maxWidth }};"></div>
 	</div>
-	
   </template>
 
   <script>
 	
     Polymer({
-	 
+
+	  /**
+       * Set the `read` attribute to `true` when the value of the `input` is primarily for consumption. The `input` can still be focused normally.
+	   * Note: By default, `read` will allow the `input` to expand to `250px`. To set your own limit, use the `maxWidth` attribute.
+       *
+       * @attribute read
+       * @type boolean
+       * @default false
+       */
 	  read: false,
+
+	  /**
+       * Sets the maximum width the `input` can expand to based on its `value`.
+       *
+       * @attribute maxWidth
+       * @type CSS length
+       * @default '250px'
+       */
+	  maxWidth: '250px',
 	  
       /**
-       * The `author` attribute sets an initial author
+       * The `author` property returns the author of the component
        *
-       * @attribute author
+       * @property author
        * @type string
        * @default 'Daniel Gleckler'
        */
-      get author() { return 'Daniel Gleckler' },
+	  author: 'Daniel Gleckler',
 
 	  ready: function() {
 		this.super();
@@ -56,6 +73,12 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 		this.shadowRoots['paper-input-decorator'].querySelector('.error-text').setAttribute('aria-live','polite');
 	  },
 
+	  readChanged: function(oldValue,newValue) {
+		if (newValue) {
+		  this.inputHandler();
+		}
+	  },
+
 	  requiredChanged: function() {
 		if (this.hasAttribute('required')) {
 		  this.input.setAttribute('required','');
@@ -63,15 +86,37 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 	  },
 
 	  focus: function() {
-		this.input.focus();
+		this.input.focus();		
 	  },
 
 	  valueChanged: function() {
+		
 		this.setEmpty(null,this.input.value);
 		this.startValidation();
 	  },
 
-	  startValidation: function(e) {
+	  inputHandler: function() {
+
+		if (this.read) {
+		  this.$.mirror.innerText = this.input.value;
+
+		  // set the min and max width to the width of the mirror, never larger than the host maxWidth minus #done width
+
+		  //var maxWidth = window.getComputedStyle(this,null).getPropertyValue('max-width');
+
+		  //var maxWidth = this.$['paper-input'].style.maxWidth.
+		  
+		  //var width = Math.min(this.$.mirror.clientWidth,(this.style.maxWidth || 99999)-this.$.done.clientWidth)+'px';
+		  var width = this.$.mirror.clientWidth+'px';
+		  this.$['paper-input'].style.minWidth = width;
+		  this.$['paper-input'].style.maxWidth = width;
+		}
+		
+		this.checkValidation();
+		
+	  },
+	  
+	  startValidation: function() {
 		if (this.validation) {
 		  this.autoValidate = true;
 		  this.checkValidation();
@@ -85,7 +130,7 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 		return 0;
 	  },
 	  
-	  checkValidation: function(e) {
+	  checkValidation: function() {
 		if (this.validation) {
 		  if (typeof this.required == 'string' && this.input.value == '') {
 			// Set the appropriate error message and mark invalid for being empty

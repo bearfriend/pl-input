@@ -6,26 +6,31 @@
 	background-color: transparent;
 }
 
-#read {
-	padding: 0.5em 0 0.25em;
+#edit, #done {
+	padding: 0.5em 0 0.25em .75em;
 	min-width: 0px;
 	white-space: nowrap;
 	box-sizing: border-box;
-	transition: opacity .4s;
 	overflow: hidden;
 	flex-shrink: 0;
 }
 
-:host([empty][read]:not([focused]):not(.invalid)) #paper-input {
-	width: 0px;
-}
-
-:host([empty]) #read {
+:host([empty]:not(.invalid)) #edit {
 	padding-left: 0px;
 }
 
+#mirror {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	visibility: hidden;
+	height: 0px;
+	display: inline-block;
+	overflow: hidden;
+}
+
 #paper-input {
-	transition: min-width .4s;
+	transition: max-width .2s;
 	box-sizing: border-box;
 }
 
@@ -33,11 +38,7 @@
 	text-overflow: ellipsis;
 }
 
-:host([read].invalid)::shadow #read, :host([focused])::shadow #read {
-	opacity: 0;
-	
+:host([read].invalid)::shadow #paper-input, :host([focused])::shadow #paper-input {
+	max-width: 100% !important;
 }
 
-:host([read].invalid)::shadow #paper-input, :host([focused])::shadow #paper-input {
-	min-width: 100%;
-}
