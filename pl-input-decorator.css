@@ -1,5 +1,5 @@
 :host {
-
+	padding: 0px;
 }
 
 :host([read]:not(.invalid):not([empty]))::shadow .unfocused-underline {
