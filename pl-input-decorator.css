@@ -2,7 +2,7 @@
 	padding: 0px;
 }
 
-:host([read]:not(.invalid):not([empty]))::shadow .unfocused-underline {
+:host([read]:not(.invalid):not([empty]):not([draft]))::shadow .unfocused-underline {
 	background-color: transparent;
 }
 
@@ -38,7 +38,7 @@
 	text-overflow: ellipsis;
 }
 
-:host([read].invalid)::shadow #paper-input, :host([focused])::shadow #paper-input {
+:host([read].invalid)::shadow #paper-input, :host([focused])::shadow #paper-input, :host([draft])::shadow #paper-input {
 	max-width: 100% !important;
 }
 

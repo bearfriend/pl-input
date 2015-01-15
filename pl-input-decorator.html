@@ -44,6 +44,15 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 	  read: false,
 
 	  /**
+       * Set the `draft` attribute to `true` to hold a `read` `input` in an editing state. This is useful to signify to the user that changes made to the `input` have not been saved due to some outside issue elsewhere on the page.
+       *
+       * @attribute draft
+       * @type boolean
+       * @default false
+       */
+	  draft: false,
+	  
+	  /**
        * Sets the maximum width the `input` can expand to based on its `value`.
        *
        * @attribute maxWidth
