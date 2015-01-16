@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer.html" />
 <link rel="import" href="../paper-input/paper-input.html" />
+<link rel="import" href="../paper-button/paper-button.html" />
 
 <!--
 Element providing solution to the shortcomings of the Polymer/paper-input.
@@ -17,13 +18,14 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 <polymer-element name="pl-input-decorator" extends="paper-input-decorator" attributes="read required validation empty" on-change="{{ valueChanged }}" on-input="{{ inputHandler }}" on-invalid="{{ checkValidation }}">  
   <template>
     <link rel="stylesheet" href="pl-input-decorator.css" />
-	<div layout?="{{ read }}" horizontal?="{{ read }}" relative aria-hidden>
+	<div layout?="{{ read }}" horizontal?="{{ read }}" relative>
 	  <div id="paper-input">
 		<shadow></shadow>
 	  </div>
 	  <template bind if="{{ read }}">
-		<label id="edit" hidden?="{{ focused }}" aria-hidden on-tap="{{ focus }}">Edit</label>
-		<label id="done" hidden?="{{ !focused }}" aria-hidden>Done</label>
+		<label id="edit" hidden?="{{ focused }}" aria-hidden="true" on-tap="{{ focus }}">Edit</label>
+		<!--<div role="button" on-tap="{{ blur }}" id="done" class="link" hidden?="{{ !focused }}">Done</div>-->
+		<div id="done" class="link" hidden?="{{ !focused }}" aria-hidden="true">Done</div>
 	  </template>
 	  <div id="mirror" style="max-width:{{ maxWidth }};"></div>
 	</div>
@@ -96,6 +98,10 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 
 	  focus: function() {
 		this.input.focus();		
+	  },
+
+	  blur: function() {
+		this.input.blur();		
 	  },
 
 	  valueChanged: function() {
