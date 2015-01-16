@@ -15,16 +15,19 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 @extends paper-input-decorator
 @homepage http://polymerlabs.github.io/pl-input-decorator
 -->
-<polymer-element name="pl-input-decorator" extends="paper-input-decorator" attributes="read required validation empty" on-change="{{ valueChanged }}" on-input="{{ inputHandler }}" on-invalid="{{ checkValidation }}">  
+<polymer-element name="pl-input-decorator" extends="paper-input-decorator" attributes="read required validation empty saved" on-change="{{ valueChanged }}" on-input="{{ inputHandler }}" on-invalid="{{ checkValidation }}">  
   <template>
     <link rel="stylesheet" href="pl-input-decorator.css" />
 	<div layout?="{{ read }}" horizontal?="{{ read }}" relative>
-	  <div id="paper-input">
-		<shadow></shadow>
+	  <div layout horizontal id="paper-input">
+		<div style="width: 100%">
+		  <shadow></shadow>
+		</div>
+		<span class="check" hidden?="{{ !saved }}">&#x2713;</span>
 	  </div>
 	  <template bind if="{{ read }}">
-		<label id="edit" hidden?="{{ focused }}" aria-hidden="true" on-tap="{{ focus }}">Edit</label>
-		<!--<div role="button" on-tap="{{ blur }}" id="done" class="link" hidden?="{{ !focused }}">Done</div>-->
+		<label id="edit" hidden?="{{ focused }}" aria-hidden="true">Edit</label>
+		<!--<div role="button" id="done" class="link" hidden?="{{ !focused }}">Done</div>-->
 		<div id="done" class="link" hidden?="{{ !focused }}" aria-hidden="true">Done</div>
 	  </template>
 	  <div id="mirror" style="max-width:{{ maxWidth }};"></div>
@@ -35,6 +38,15 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 	
     Polymer({
 
+	  /**
+       * The `saved` attribute is only applicable when `read` is `true`. Set the `saved` attribute to `true` to temporarily display a checkmark next to the input. A `focus` event will set `saved` to `false`.
+       *
+       * @attribute saved
+       * @type boolean
+       * @default false
+       */
+	  saved: false,
+	  
 	  /**
        * Set the `read` attribute to `true` when the value of the `input` is primarily for consumption. The `input` can still be focused normally.
 	   * Note: By default, `read` will allow the `input` to expand to `250px`. To set your own limit, use the `maxWidth` attribute.
@@ -80,6 +92,7 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 	  
 	  attached: function() {
 		this.super();
+		this.input.addEventListener('focus',this.focusHandler.bind(this));
 		this.setEmpty(null,this.input.value);
 		this.shadowRoots['paper-input-decorator'].querySelector('.error-text').setAttribute('aria-live','polite');
 	  },
@@ -96,16 +109,12 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 		}
 	  },
 
-	  focus: function() {
-		this.input.focus();		
+	  focusHandler: function() {
+		this.saved = false;
 	  },
-
-	  blur: function() {
-		this.input.blur();		
-	  },
-
+	  
 	  valueChanged: function() {
-		
+
 		this.setEmpty(null,this.input.value);
 		this.startValidation();
 	  },
@@ -113,15 +122,9 @@ Element providing solution to the shortcomings of the Polymer/paper-input.
 	  inputHandler: function() {
 
 		if (this.read) {
+
 		  this.$.mirror.innerText = this.input.value;
 
-		  // set the min and max width to the width of the mirror, never larger than the host maxWidth minus #done width
-
-		  //var maxWidth = window.getComputedStyle(this,null).getPropertyValue('max-width');
-
-		  //var maxWidth = this.$['paper-input'].style.maxWidth.
-		  
-		  //var width = Math.min(this.$.mirror.clientWidth,(this.style.maxWidth || 99999)-this.$.done.clientWidth)+'px';
 		  var width = this.$.mirror.clientWidth+'px';
 		  this.$['paper-input'].style.minWidth = width;
 		  this.$['paper-input'].style.maxWidth = width;

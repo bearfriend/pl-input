@@ -42,3 +42,9 @@
 	max-width: 100% !important;
 }
 
+.check {
+	color: green;
+	align-self: center;
+	padding-left: .45em;
+	margin-right: -.55em;
+}
